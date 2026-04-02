@@ -72,6 +72,10 @@ function CameraController({ controlsRef }: { controlsRef: React.RefObject<OrbitC
 function SceneContent() {
   const controlsRef = useRef<OrbitControlsImpl>(null)
 
+  // Start looking at Earth
+  const earth = planets.find((p) => p.name === 'Earth')!
+  const [ex, , ez] = getPlanetPosition(earth, 2026.25)
+
   return (
     <>
       <ambientLight intensity={0.3} />
@@ -87,7 +91,7 @@ function SceneContent() {
 
       <OrbitControls
         ref={controlsRef}
-        target={[0, 0, 0]}
+        target={[ex, 0, ez]}
         enablePan
         panSpeed={0.8}
         mouseButtons={{
@@ -114,7 +118,7 @@ function SceneContent() {
 export function Scene() {
   return (
     <Canvas
-      camera={{ position: [0, 5, 25], fov: 45 }}
+      camera={{ position: [0, 3, 25], fov: 45 }}
       gl={{
         antialias: true,
         alpha: false,
