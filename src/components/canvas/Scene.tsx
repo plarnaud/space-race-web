@@ -46,11 +46,23 @@ function CameraController({ controlsRef }: { controlsRef: React.RefObject<OrbitC
       targetPos.current = new THREE.Vector3(pos.x, pos.y + 1, pos.z + 2)
     }
 
+    function handleCenterIfFar(e: Event) {
+      const pos = (e as CustomEvent).detail as { x: number; y: number; z: number }
+      const target = new THREE.Vector3(pos.x, pos.y, pos.z)
+      const dist = camera.position.distanceTo(target)
+      if (dist > 20) {
+        targetLookAt.current = target
+        targetPos.current = new THREE.Vector3(pos.x, pos.y + 2, pos.z + 5)
+      }
+    }
+
     window.addEventListener('center-planet', handleCenter)
     window.addEventListener('center-mission', handleCenterMission)
+    window.addEventListener('center-if-far', handleCenterIfFar)
     return () => {
       window.removeEventListener('center-planet', handleCenter)
       window.removeEventListener('center-mission', handleCenterMission)
+      window.removeEventListener('center-if-far', handleCenterIfFar)
     }
   }, [date, camera])
 

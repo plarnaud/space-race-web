@@ -121,12 +121,10 @@ function MissionDot({ mission, position }: { mission: Mission; position: [number
 
   const handleClick = () => {
     tapObject(mission.id, isMobile)
-    // Center camera on deep-space missions (they're far away)
-    if (mission.destination === 'deep-space') {
-      window.dispatchEvent(new CustomEvent('center-mission', {
-        detail: { x: position[0], y: position[1], z: position[2] },
-      }))
-    }
+    // Center camera if the mission is far from current camera position
+    window.dispatchEvent(new CustomEvent('center-if-far', {
+      detail: { x: position[0], y: position[1], z: position[2] },
+    }))
   }
 
   return (
