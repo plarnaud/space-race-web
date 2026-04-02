@@ -19,6 +19,8 @@ function CameraController({ controlsRef }: { controlsRef: React.RefObject<OrbitC
   const targetPos = useRef<THREE.Vector3 | null>(null)
   const targetLookAt = useRef<THREE.Vector3 | null>(null)
   const date = useTimelineStore((s) => s.date)
+  const prevDate = useRef(date)
+  const trackedPlanet = useRef<string>('Earth') // which planet the camera is following
 
   // Center on planet/sun/mission
   useEffect(() => {
@@ -26,6 +28,7 @@ function CameraController({ controlsRef }: { controlsRef: React.RefObject<OrbitC
       const name = (e as CustomEvent).detail as string
 
       if (name === 'sun') {
+        trackedPlanet.current = ''
         targetLookAt.current = new THREE.Vector3(0, 0, 0)
         targetPos.current = new THREE.Vector3(0, 5, 10)
         return
@@ -33,6 +36,7 @@ function CameraController({ controlsRef }: { controlsRef: React.RefObject<OrbitC
 
       const planet = planets.find((p) => p.name.toLowerCase() === name)
       if (planet) {
+        trackedPlanet.current = planet.name
         const [px, py, pz] = getPlanetPosition(planet, date)
         targetLookAt.current = new THREE.Vector3(px, py, pz)
         const dist = Math.max(planet.radius * 15, 2)
@@ -68,13 +72,38 @@ function CameraController({ controlsRef }: { controlsRef: React.RefObject<OrbitC
 
 
   useFrame(() => {
-    if (!targetPos.current || !controlsRef.current) return
-    camera.position.lerp(targetPos.current, 0.06)
-    controlsRef.current.target.lerp(targetLookAt.current!, 0.06)
-    controlsRef.current.update()
-    if (camera.position.distanceTo(targetPos.current) < 0.1) {
-      targetPos.current = null
-      targetLookAt.current = null
+    if (!controlsRef.current) return
+
+    // When the date changes, shift camera + target to follow the tracked planet
+    if (date !== prevDate.current && trackedPlanet.current) {
+      const planet = planets.find((p) => p.name === trackedPlanet.current)
+      if (planet) {
+        const oldPos = getPlanetPosition(planet, prevDate.current)
+        const newPos = getPlanetPosition(planet, date)
+        const dx = newPos[0] - oldPos[0]
+        const dy = newPos[1] - oldPos[1]
+        const dz = newPos[2] - oldPos[2]
+
+        camera.position.x += dx
+        camera.position.y += dy
+        camera.position.z += dz
+        controlsRef.current.target.x += dx
+        controlsRef.current.target.y += dy
+        controlsRef.current.target.z += dz
+        controlsRef.current.update()
+      }
+      prevDate.current = date
+    }
+
+    // Smooth fly-to animation
+    if (targetPos.current) {
+      camera.position.lerp(targetPos.current, 0.06)
+      controlsRef.current.target.lerp(targetLookAt.current!, 0.06)
+      controlsRef.current.update()
+      if (camera.position.distanceTo(targetPos.current) < 0.1) {
+        targetPos.current = null
+        targetLookAt.current = null
+      }
     }
   })
 
