@@ -1,9 +1,7 @@
 'use client'
 
-import { useRef, useMemo, useState } from 'react'
-import { useFrame } from '@react-three/fiber'
+import { useMemo, useState } from 'react'
 import { Html } from '@react-three/drei'
-import * as THREE from 'three'
 import { useTimelineStore } from '@/stores/timeline-store'
 import { getMissionsByDate, getActiveMissions, countries, type Mission } from '@/data/missions'
 import { planets, getPlanetPosition } from '@/data/planets'
@@ -27,6 +25,15 @@ function getMoonPos(date: number): [number, number, number] {
   return [ex + Math.cos(angle) * 0.8, ey + 0.05, ez + Math.sin(angle) * 0.8]
 }
 
+// Simple hash to get a stable unique angle per mission
+function hashId(id: string): number {
+  let h = 0
+  for (let i = 0; i < id.length; i++) {
+    h = ((h << 5) - h + id.charCodeAt(i)) | 0
+  }
+  return (Math.abs(h) % 1000) / 1000 // 0..1
+}
+
 function markerPosition(
   mission: Mission,
   index: number,
@@ -35,25 +42,25 @@ function markerPosition(
 ): [number, number, number] {
   const earthPos = getBodyPos('Earth', date)
   const marsPos = getBodyPos('Mars', date)
+  const seed = hashId(mission.id)
 
   if (mission.destination === 'lunar') {
     const moonPos = getMoonPos(date)
     if (mission.landed) {
-      // On the Moon's surface — spread around it at its radius
-      const angle = (index / Math.max(total, 1)) * Math.PI * 2 + index * 0.7
-      const r = MOON_SCALE + 0.01
+      const angle = seed * Math.PI * 2
+      const tilt = (seed * 0.6 - 0.3)
+      const r = MOON_SCALE + 0.01 + seed * 0.005
       return [
         moonPos[0] + Math.cos(angle) * r,
-        moonPos[1] + Math.sin(angle) * r * 0.5,
+        moonPos[1] + tilt * r,
         moonPos[2] + Math.sin(angle) * r,
       ]
     }
-    // Orbiting near the Moon
-    const angle = (index / Math.max(total, 1)) * Math.PI * 2
-    const r = 0.3 + (index % 3) * 0.1
+    const angle = seed * Math.PI * 2
+    const r = 0.25 + seed * 0.2
     return [
       moonPos[0] + Math.cos(angle) * r,
-      moonPos[1] + Math.sin(angle) * r * 0.3,
+      moonPos[1] + (seed - 0.5) * 0.2,
       moonPos[2] + Math.sin(angle) * r,
     ]
   }
@@ -61,37 +68,36 @@ function markerPosition(
   if (mission.destination === 'mars') {
     const marsRadius = 0.11
     if (mission.landed) {
-      // On Mars surface
-      const angle = (index / Math.max(total, 1)) * Math.PI * 2 + index * 0.5
-      const r = marsRadius + 0.015
+      const angle = seed * Math.PI * 2
+      const tilt = (seed * 0.6 - 0.3)
+      const r = marsRadius + 0.01 + seed * 0.005
       return [
         marsPos[0] + Math.cos(angle) * r,
-        marsPos[1] + Math.sin(angle) * r * 0.5,
+        marsPos[1] + tilt * r,
         marsPos[2] + Math.sin(angle) * r,
       ]
     }
-    // Orbiting Mars
-    const angle = (index / Math.max(total, 1)) * Math.PI * 2
-    const r = 0.4
+    const angle = seed * Math.PI * 2
+    const r = 0.3 + seed * 0.2
     return [
       marsPos[0] + Math.cos(angle) * r,
-      marsPos[1] + Math.sin(angle) * r * 0.3,
+      marsPos[1] + (seed - 0.5) * 0.15,
       marsPos[2] + Math.sin(angle) * r,
     ]
   }
 
   if (mission.destination === 'deep-space') {
-    const angle = index * 1.8 + 0.5
-    const dist = 80 + index * 12
-    return [Math.cos(angle) * dist, Math.sin(angle) * 3, Math.sin(angle) * dist]
+    const angle = seed * Math.PI * 2
+    const dist = 80 + seed * 30
+    return [Math.cos(angle) * dist, (seed - 0.5) * 4, Math.sin(angle) * dist]
   }
 
   // Earth orbit
-  const angle = (index / Math.max(total, 1)) * Math.PI * 2
-  const r = 0.5 + (index % 2) * 0.15
+  const angle = seed * Math.PI * 2
+  const r = 0.4 + seed * 0.3
   return [
     earthPos[0] + Math.cos(angle) * r,
-    earthPos[1] + Math.sin(angle) * r * 0.2 + 0.1,
+    earthPos[1] + (seed - 0.5) * 0.2,
     earthPos[2] + Math.sin(angle) * r,
   ]
 }
@@ -102,22 +108,12 @@ function formatMissionDate(dateStr: string): string {
 }
 
 function MissionDot({ mission, position }: { mission: Mission; position: [number, number, number] }) {
-  const meshRef = useRef<THREE.Mesh>(null)
   const color = COUNTRY_COLORS[mission.country] || '#ffffff'
   const tapObject = useTimelineStore((s) => s.tapObject)
   const selectedId = useTimelineStore((s) => s.selectedMissionId)
   const isSelected = selectedId === mission.id
-  const isActive = mission.status === 'active'
   const [hovered, setHovered] = useState(false)
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
-
-  useFrame(() => {
-    if (!meshRef.current) return
-    if (isActive) {
-      const scale = 1 + Math.sin(Date.now() * 0.003) * 0.3
-      meshRef.current.scale.setScalar(scale)
-    }
-  })
 
   const handleClick = () => {
     tapObject(mission.id, isMobile)
@@ -131,7 +127,6 @@ function MissionDot({ mission, position }: { mission: Mission; position: [number
     <group position={position}>
       {/* Visible dot + click target */}
       <mesh
-        ref={meshRef}
         onClick={(e) => {
           e.stopPropagation()
           handleClick()
