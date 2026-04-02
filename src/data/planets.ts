@@ -183,6 +183,26 @@ export const planets: Planet[] = [
     },
     description: 'Windiest planet with speeds up to 2,100 km/h. Discovered by mathematical prediction before visual observation.',
   },
+  {
+    name: 'Pluto',
+    distanceAU: 39.48,
+    visualDistance: 78,
+    radius: 0.08,
+    color: '#c9b8a4',
+    textureFile: '/textures/neptune.jpg', // reuse Neptune texture, closest match
+    orbitalPeriodYears: 247.94,
+    meanLongJ2000: 238.93,
+    stats: {
+      diameter: '2,377 km',
+      gravity: '0.62 m/s²',
+      temperature: '-230°C',
+      moons: '5 (largest: Charon)',
+      dayLength: '6.4 Earth days',
+      yearLength: '248 Earth years',
+      atmosphere: 'Thin N₂, CH₄, CO',
+    },
+    description: 'Dwarf planet with a heart-shaped glacier (Tombaugh Regio). Reclassified from planet in 2006. New Horizons flew by in 2015, revealing a surprisingly complex and geologically active world.',
+  },
 ]
 
 /**

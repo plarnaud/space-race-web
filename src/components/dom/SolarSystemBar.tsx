@@ -12,6 +12,7 @@ const BODIES = [
   { name: 'Saturn', id: 'planet-saturn', color: '#e8d5a3', r: 6.5, rMobile: 5, rings: true },
   { name: 'Uranus', id: 'planet-uranus', color: '#7ec8e3', r: 5.5, rMobile: 4 },
   { name: 'Neptune', id: 'planet-neptune', color: '#4b70dd', r: 5.5, rMobile: 4 },
+  { name: 'Pluto', id: 'planet-pluto', color: '#c9b8a4', r: 3.5, rMobile: 2.5 },
 ]
 
 function SolarSystemSVG({ width, height, mobile }: { width: number; height: number; mobile: boolean }) {

@@ -251,4 +251,26 @@ export const moons: MoonData[] = [
     wikiTitle: 'Triton_(moon)',
     detailUrl: 'https://science.nasa.gov/neptune/moons/triton/',
   },
+
+  // === PLUTO ===
+  {
+    id: 'charon',
+    name: 'Charon',
+    parent: 'Pluto',
+    radius: 0.04,
+    orbitRadius: 0.4,
+    orbitalPeriodDays: 6.387,
+    color: '#8a8580',
+    stats: {
+      diameter: '1,212 km',
+      gravity: '0.288 m/s²',
+      orbitalPeriod: '6.39 days (tidally locked)',
+      discoveredBy: 'James Christy',
+      discoveredYear: 1978,
+      notableFeature: 'Half the size of Pluto — largest moon relative to its planet',
+    },
+    description: 'So large relative to Pluto that the two orbit a shared center of gravity between them. Both are tidally locked, always showing the same face to each other. Features a dark red polar cap.',
+    wikiTitle: 'Charon_(moon)',
+    detailUrl: 'https://science.nasa.gov/pluto/moons/charon/',
+  },
 ]
