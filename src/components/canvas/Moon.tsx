@@ -1,16 +1,20 @@
 'use client'
 
-import { useMemo } from 'react'
-import { useTexture } from '@react-three/drei'
+import { useMemo, useState } from 'react'
+import { useTexture, Html } from '@react-three/drei'
 import { useTimelineStore } from '@/stores/timeline-store'
 import { planets, getPlanetPosition } from '@/data/planets'
 
-const MOON_VISUAL_DISTANCE = 0.8 // Visual distance from Earth (not to scale)
+const MOON_VISUAL_DISTANCE = 0.8
 const MOON_SCALE = 0.05
 const LUNAR_PERIOD_YEARS = 27.322 / 365.25
 
 export function Moon() {
   const date = useTimelineStore((s) => s.date)
+  const selectMission = useTimelineStore((s) => s.selectMission)
+  const selectedId = useTimelineStore((s) => s.selectedMissionId)
+  const isSelected = selectedId === 'moon-luna'
+  const [hovered, setHovered] = useState(false)
 
   const [colorMap, bumpMap] = useTexture([
     '/textures/moon_color.jpg',
@@ -18,11 +22,8 @@ export function Moon() {
   ])
 
   const position = useMemo((): [number, number, number] => {
-    // Get Earth's position first
     const earth = planets.find((p) => p.name === 'Earth')!
     const [ex, ey, ez] = getPlanetPosition(earth, date)
-
-    // Moon orbits Earth
     const orbits = (date - 2000.0) / LUNAR_PERIOD_YEARS
     const angle = orbits * Math.PI * 2
     return [
@@ -33,16 +34,45 @@ export function Moon() {
   }, [date])
 
   return (
-    <mesh position={position}>
-      <sphereGeometry args={[MOON_SCALE, 32, 32]} />
-      <meshStandardMaterial
-        map={colorMap}
-        bumpMap={bumpMap}
-        bumpScale={0.02}
-        metalness={0}
-        roughness={0.9}
-      />
-    </mesh>
+    <group position={position}>
+      <mesh
+        onClick={(e) => {
+          e.stopPropagation()
+          selectMission(isSelected ? null : 'moon-luna')
+          window.dispatchEvent(new CustomEvent('center-mission', {
+            detail: { x: position[0], y: position[1], z: position[2] },
+          }))
+        }}
+        onPointerEnter={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer' }}
+        onPointerLeave={() => { setHovered(false); document.body.style.cursor = 'default' }}
+      >
+        <sphereGeometry args={[MOON_SCALE, 32, 32]} />
+        <meshStandardMaterial
+          map={colorMap}
+          bumpMap={bumpMap}
+          bumpScale={0.02}
+          metalness={0}
+          roughness={0.9}
+        />
+      </mesh>
+
+      <Html
+        position={[0, MOON_SCALE + 0.08, 0]}
+        center
+        style={{ pointerEvents: 'none', userSelect: 'none', whiteSpace: 'nowrap' }}
+      >
+        <div style={{
+          fontFamily: 'var(--font-mono)',
+          fontSize: '7px',
+          letterSpacing: '1px',
+          color: (isSelected || hovered) ? '#e8ecf1' : 'rgba(232, 236, 241, 0.3)',
+          textTransform: 'uppercase',
+          textShadow: '0 0 6px rgba(0,0,0,0.9)',
+        }}>
+          Moon
+        </div>
+      </Html>
+    </group>
   )
 }
 

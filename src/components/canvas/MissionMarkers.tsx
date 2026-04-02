@@ -7,56 +7,88 @@ import * as THREE from 'three'
 import { useTimelineStore } from '@/stores/timeline-store'
 import { getActiveMissions, countries, type Mission } from '@/data/missions'
 import { planets, getPlanetPosition } from '@/data/planets'
+import { MOON_SCALE } from './Moon'
 
 const COUNTRY_COLORS: Record<string, string> = Object.fromEntries(
   countries.map((c) => [c.code, c.color])
 )
 
-function getEarthPos(date: number): [number, number, number] {
-  const earth = planets.find((p) => p.name === 'Earth')!
-  return getPlanetPosition(earth, date)
+const LUNAR_PERIOD_YEARS = 27.322 / 365.25
+
+function getBodyPos(name: string, date: number): [number, number, number] {
+  const p = planets.find((pl) => pl.name === name)!
+  return getPlanetPosition(p, date)
 }
 
-function getMarsPos(date: number): [number, number, number] {
-  const mars = planets.find((p) => p.name === 'Mars')!
-  return getPlanetPosition(mars, date)
+function getMoonPos(date: number): [number, number, number] {
+  const [ex, ey, ez] = getBodyPos('Earth', date)
+  const orbits = (date - 2000.0) / LUNAR_PERIOD_YEARS
+  const angle = orbits * Math.PI * 2
+  return [ex + Math.cos(angle) * 0.8, ey + 0.05, ez + Math.sin(angle) * 0.8]
 }
 
 function markerPosition(
   mission: Mission,
   index: number,
   total: number,
-  earthPos: [number, number, number],
-  marsPos: [number, number, number],
+  date: number,
 ): [number, number, number] {
+  const earthPos = getBodyPos('Earth', date)
+  const marsPos = getBodyPos('Mars', date)
+
   if (mission.destination === 'lunar') {
+    const moonPos = getMoonPos(date)
+    if (mission.landed) {
+      // On the Moon's surface — spread around it at its radius
+      const angle = (index / Math.max(total, 1)) * Math.PI * 2 + index * 0.7
+      const r = MOON_SCALE + 0.01
+      return [
+        moonPos[0] + Math.cos(angle) * r,
+        moonPos[1] + Math.sin(angle) * r * 0.5,
+        moonPos[2] + Math.sin(angle) * r,
+      ]
+    }
+    // Orbiting near the Moon
     const angle = (index / Math.max(total, 1)) * Math.PI * 2
-    const r = 0.4 + (index % 3) * 0.15
+    const r = 0.3 + (index % 3) * 0.1
     return [
-      earthPos[0] + Math.cos(angle) * r * 1.5,
-      earthPos[1] + Math.sin(angle) * r * 0.3,
-      earthPos[2] + Math.sin(angle) * r,
+      moonPos[0] + Math.cos(angle) * r,
+      moonPos[1] + Math.sin(angle) * r * 0.3,
+      moonPos[2] + Math.sin(angle) * r,
     ]
   }
+
   if (mission.destination === 'mars') {
+    const marsRadius = 0.11
+    if (mission.landed) {
+      // On Mars surface
+      const angle = (index / Math.max(total, 1)) * Math.PI * 2 + index * 0.5
+      const r = marsRadius + 0.015
+      return [
+        marsPos[0] + Math.cos(angle) * r,
+        marsPos[1] + Math.sin(angle) * r * 0.5,
+        marsPos[2] + Math.sin(angle) * r,
+      ]
+    }
+    // Orbiting Mars
     const angle = (index / Math.max(total, 1)) * Math.PI * 2
-    const r = 0.5
+    const r = 0.4
     return [
       marsPos[0] + Math.cos(angle) * r,
       marsPos[1] + Math.sin(angle) * r * 0.3,
       marsPos[2] + Math.sin(angle) * r,
     ]
   }
+
   if (mission.destination === 'deep-space') {
-    // Far outside the solar system (Neptune is at visualDistance 65)
-    // Spread them out beyond Neptune, each at a different angle
     const angle = index * 1.8 + 0.5
     const dist = 80 + index * 12
     return [Math.cos(angle) * dist, Math.sin(angle) * 3, Math.sin(angle) * dist]
   }
-  // Earth orbit — near Earth
+
+  // Earth orbit
   const angle = (index / Math.max(total, 1)) * Math.PI * 2
-  const r = 0.5 + (index % 2) * 0.2
+  const r = 0.5 + (index % 2) * 0.15
   return [
     earthPos[0] + Math.cos(angle) * r,
     earthPos[1] + Math.sin(angle) * r * 0.2 + 0.1,
@@ -114,7 +146,7 @@ function MissionDot({ mission, position }: { mission: Mission; position: [number
         <meshBasicMaterial color={color} />
       </mesh>
 
-      {/* Label — clickable via HTML, not 3D mesh */}
+      {/* Label */}
       <Html
         position={[0, 0.15, 0]}
         center
@@ -150,6 +182,7 @@ function MissionDot({ mission, position }: { mission: Mission; position: [number
           {(hovered || isSelected) && (
             <div style={{ fontSize: '8px', color: '#7a8ba3', marginTop: '2px', letterSpacing: '0.5px' }}>
               {formatMissionDate(mission.launchDate)}
+              {mission.landed && ' · LANDED'}
               {mission.status === 'failed' && ' · FAILED'}
             </div>
           )}
@@ -169,19 +202,21 @@ export function MissionMarkers() {
       all = all.filter((m) => m.country === filteredCountry)
     }
 
-    const earthPos = getEarthPos(date)
-    const marsPos = getMarsPos(date)
-
-    const lunar = all.filter((m) => m.destination === 'lunar')
+    // Group by destination, with landed missions separate for positioning
+    const lunarLanded = all.filter((m) => m.destination === 'lunar' && m.landed)
+    const lunarOrbit = all.filter((m) => m.destination === 'lunar' && !m.landed)
+    const marsLanded = all.filter((m) => m.destination === 'mars' && m.landed)
+    const marsOrbit = all.filter((m) => m.destination === 'mars' && !m.landed)
     const orbit = all.filter((m) => m.destination === 'earth-orbit')
     const deep = all.filter((m) => m.destination === 'deep-space')
-    const mars = all.filter((m) => m.destination === 'mars')
 
     return [
-      ...lunar.map((m, i) => ({ mission: m, pos: markerPosition(m, i, lunar.length, earthPos, marsPos) })),
-      ...orbit.map((m, i) => ({ mission: m, pos: markerPosition(m, i, orbit.length, earthPos, marsPos) })),
-      ...deep.map((m, i) => ({ mission: m, pos: markerPosition(m, i, deep.length, earthPos, marsPos) })),
-      ...mars.map((m, i) => ({ mission: m, pos: markerPosition(m, i, mars.length, earthPos, marsPos) })),
+      ...lunarLanded.map((m, i) => ({ mission: m, pos: markerPosition(m, i, lunarLanded.length, date) })),
+      ...lunarOrbit.map((m, i) => ({ mission: m, pos: markerPosition(m, i, lunarOrbit.length, date) })),
+      ...marsLanded.map((m, i) => ({ mission: m, pos: markerPosition(m, i, marsLanded.length, date) })),
+      ...marsOrbit.map((m, i) => ({ mission: m, pos: markerPosition(m, i, marsOrbit.length, date) })),
+      ...orbit.map((m, i) => ({ mission: m, pos: markerPosition(m, i, orbit.length, date) })),
+      ...deep.map((m, i) => ({ mission: m, pos: markerPosition(m, i, deep.length, date) })),
     ]
   }, [date, filteredCountry])
 

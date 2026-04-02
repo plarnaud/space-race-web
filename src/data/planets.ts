@@ -12,7 +12,7 @@ export interface Planet {
     diameter: string
     gravity: string
     temperature: string
-    moons: number
+    moons: string
     dayLength: string
     yearLength: string
     atmosphere: string
@@ -35,7 +35,7 @@ export const planets: Planet[] = [
       diameter: '4,879 km',
       gravity: '3.7 m/s²',
       temperature: '-180°C to 430°C',
-      moons: 0,
+      moons: 'None',
       dayLength: '59 Earth days',
       yearLength: '88 Earth days',
       atmosphere: 'None (trace exosphere)',
@@ -55,7 +55,7 @@ export const planets: Planet[] = [
       diameter: '12,104 km',
       gravity: '8.87 m/s²',
       temperature: '462°C (surface)',
-      moons: 0,
+      moons: 'None',
       dayLength: '243 Earth days',
       yearLength: '225 Earth days',
       atmosphere: 'CO₂, sulfuric acid clouds',
@@ -75,7 +75,7 @@ export const planets: Planet[] = [
       diameter: '12,742 km',
       gravity: '9.81 m/s²',
       temperature: '-89°C to 57°C',
-      moons: 1,
+      moons: '1 (the Moon)',
       dayLength: '24 hours',
       yearLength: '365.25 days',
       atmosphere: 'N₂, O₂',
@@ -95,7 +95,7 @@ export const planets: Planet[] = [
       diameter: '6,779 km',
       gravity: '3.72 m/s²',
       temperature: '-87°C to -5°C',
-      moons: 2,
+      moons: '2 (Phobos, Deimos)',
       dayLength: '24h 37m',
       yearLength: '687 Earth days',
       atmosphere: 'Thin CO₂',
@@ -115,7 +115,7 @@ export const planets: Planet[] = [
       diameter: '139,820 km',
       gravity: '24.79 m/s²',
       temperature: '-110°C (clouds)',
-      moons: 95,
+      moons: '95 known (4 major: Io, Europa, Ganymede, Callisto)',
       dayLength: '9h 56m',
       yearLength: '11.9 Earth years',
       atmosphere: 'H₂, He, ammonia clouds',
@@ -136,7 +136,7 @@ export const planets: Planet[] = [
       diameter: '116,460 km',
       gravity: '10.44 m/s²',
       temperature: '-140°C (clouds)',
-      moons: 146,
+      moons: '146 known (major: Titan, Enceladus)',
       dayLength: '10h 42m',
       yearLength: '29.5 Earth years',
       atmosphere: 'H₂, He',
@@ -156,7 +156,7 @@ export const planets: Planet[] = [
       diameter: '50,724 km',
       gravity: '8.87 m/s²',
       temperature: '-195°C',
-      moons: 28,
+      moons: '28 known (largest: Titania)',
       dayLength: '17h 14m',
       yearLength: '84 Earth years',
       atmosphere: 'H₂, He, methane',
@@ -176,7 +176,7 @@ export const planets: Planet[] = [
       diameter: '49,528 km',
       gravity: '11.15 m/s²',
       temperature: '-200°C',
-      moons: 16,
+      moons: '16 known (largest: Triton)',
       dayLength: '16h 6m',
       yearLength: '165 Earth years',
       atmosphere: 'H₂, He, methane',

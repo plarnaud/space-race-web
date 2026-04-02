@@ -16,6 +16,29 @@ export interface MoonData {
   }
   description: string
   wikiTitle: string // for image lookup
+  detailUrl: string // NASA if available, otherwise Wikipedia
+}
+
+// Earth's Moon is rendered separately in Moon.tsx with textures.
+// Its info panel data is in lunaData below.
+
+export const lunaData: MoonData = {
+  id: 'luna',
+  name: 'The Moon',
+  parent: 'Earth',
+  radius: 0.05,
+  orbitRadius: 0.8,
+  orbitalPeriodDays: 27.322,
+  color: '#c0c0c0',
+  stats: {
+    diameter: '3,474 km',
+    gravity: '1.62 m/s²',
+    orbitalPeriod: '27.3 days',
+    notableFeature: 'Only celestial body visited by humans',
+  },
+  description: 'Earth\'s only natural satellite. Twelve humans have walked on its surface between 1969 and 1972. It stabilizes Earth\'s axial tilt and creates our tides. The target of the new space race.',
+  wikiTitle: 'Moon',
+  detailUrl: 'https://science.nasa.gov/moon/',
 }
 
 export const moons: MoonData[] = [
@@ -38,6 +61,7 @@ export const moons: MoonData[] = [
     },
     description: 'Larger of Mars\'s two moons. Orbits so close it will crash into Mars or break apart in ~50 million years. Completes 3 orbits per Martian day.',
     wikiTitle: 'Phobos_(moon)',
+    detailUrl: 'https://science.nasa.gov/mars/moons/phobos/',
   },
   {
     id: 'deimos',
@@ -57,6 +81,7 @@ export const moons: MoonData[] = [
     },
     description: 'Smaller of Mars\'s moons. Slowly spiraling away from Mars. May be a captured asteroid.',
     wikiTitle: 'Deimos_(moon)',
+    detailUrl: 'https://science.nasa.gov/mars/moons/deimos/',
   },
 
   // === JUPITER (Galilean moons) ===
@@ -78,6 +103,7 @@ export const moons: MoonData[] = [
     },
     description: 'Most volcanically active body in the solar system. Tidal heating from Jupiter creates over 400 active volcanoes. Surface constantly reshaped by lava flows.',
     wikiTitle: 'Io_(moon)',
+    detailUrl: 'https://science.nasa.gov/jupiter/moons/io/',
   },
   {
     id: 'europa',
@@ -97,6 +123,7 @@ export const moons: MoonData[] = [
     },
     description: 'Covered in a smooth ice shell hiding a global saltwater ocean. One of the most promising places to search for extraterrestrial life.',
     wikiTitle: 'Europa_(moon)',
+    detailUrl: 'https://science.nasa.gov/jupiter/moons/europa/',
   },
   {
     id: 'ganymede',
@@ -116,6 +143,7 @@ export const moons: MoonData[] = [
     },
     description: 'Larger than Mercury. Only moon with its own magnetic field. Has a subsurface ocean sandwiched between layers of ice.',
     wikiTitle: 'Ganymede_(moon)',
+    detailUrl: 'https://science.nasa.gov/jupiter/moons/ganymede/',
   },
   {
     id: 'callisto',
@@ -135,6 +163,7 @@ export const moons: MoonData[] = [
     },
     description: 'Most heavily cratered object known. Surface hasn\'t changed in 4 billion years. May also have a subsurface ocean.',
     wikiTitle: 'Callisto_(moon)',
+    detailUrl: 'https://science.nasa.gov/jupiter/moons/callisto/',
   },
 
   // === SATURN ===
@@ -156,6 +185,7 @@ export const moons: MoonData[] = [
     },
     description: 'Only moon with a dense atmosphere (thicker than Earth\'s). Has lakes and seas of liquid methane and ethane. Huygens probe landed here in 2005.',
     wikiTitle: 'Titan_(moon)',
+    detailUrl: 'https://science.nasa.gov/saturn/moons/titan/',
   },
   {
     id: 'enceladus',
@@ -175,6 +205,7 @@ export const moons: MoonData[] = [
     },
     description: 'Shoots geysers of water ice into space from its south pole. Has a global subsurface ocean with hydrothermal vents. Top candidate for life beyond Earth.',
     wikiTitle: 'Enceladus',
+    detailUrl: 'https://science.nasa.gov/saturn/moons/enceladus/',
   },
 
   // === URANUS ===
@@ -196,6 +227,7 @@ export const moons: MoonData[] = [
     },
     description: 'Largest moon of Uranus. Surface shows huge canyons and fault scarps, suggesting past geological activity.',
     wikiTitle: 'Titania_(moon)',
+    detailUrl: 'https://science.nasa.gov/uranus/moons/titania/',
   },
 
   // === NEPTUNE ===
@@ -217,5 +249,6 @@ export const moons: MoonData[] = [
     },
     description: 'Only large moon that orbits in the opposite direction of its planet\'s rotation. Probably a captured dwarf planet from the Kuiper Belt. Has nitrogen geysers.',
     wikiTitle: 'Triton_(moon)',
+    detailUrl: 'https://science.nasa.gov/neptune/moons/triton/',
   },
 ]

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useTimelineStore } from '@/stores/timeline-store'
 import { missions } from '@/data/missions'
 import { planets } from '@/data/planets'
-import { moons } from '@/data/moons'
+import { moons, lunaData } from '@/data/moons'
 import { AnimatePresence, motion } from 'framer-motion'
 
 function WikiImage({ title, alt }: { title: string; alt: string }) {
@@ -61,7 +61,7 @@ function PlanetPanel({ planetName, onClose }: { planetName: string; onClose: () 
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 340, opacity: 0 }}
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed right-6 top-6 z-20 w-[300px] max-h-[calc(100vh-120px)] overflow-y-auto pointer-events-auto"
+      className="fixed z-20 overflow-y-auto pointer-events-auto md:right-6 md:top-6 md:w-[300px] md:max-h-[calc(100vh-120px)] max-md:bottom-0 max-md:left-0 max-md:right-0 max-md:max-h-[55vh] max-md:w-full max-md:rounded-t-lg"
       style={{
         background: 'rgba(10, 18, 32, 0.85)',
         backdropFilter: 'blur(12px)',
@@ -91,7 +91,7 @@ function PlanetPanel({ planetName, onClose }: { planetName: string; onClose: () 
       <DetailRow label="DIAMETER" value={planet.stats.diameter} />
       <DetailRow label="GRAVITY" value={planet.stats.gravity} />
       <DetailRow label="TEMPERATURE" value={planet.stats.temperature} />
-      <DetailRow label="MOONS" value={String(planet.stats.moons)} />
+      <DetailRow label="MOONS" value={planet.stats.moons} />
       <DetailRow label="DAY LENGTH" value={planet.stats.dayLength} />
       <DetailRow label="YEAR LENGTH" value={planet.stats.yearLength} />
       <DetailRow label="ATMOSPHERE" value={planet.stats.atmosphere} />
@@ -119,7 +119,7 @@ function SunPanel({ onClose }: { onClose: () => void }) {
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 340, opacity: 0 }}
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed right-6 top-6 z-20 w-[300px] max-h-[calc(100vh-120px)] overflow-y-auto pointer-events-auto"
+      className="fixed z-20 overflow-y-auto pointer-events-auto md:right-6 md:top-6 md:w-[300px] md:max-h-[calc(100vh-120px)] max-md:bottom-0 max-md:left-0 max-md:right-0 max-md:max-h-[55vh] max-md:w-full max-md:rounded-t-lg"
       style={{
         background: 'rgba(10, 18, 32, 0.85)',
         backdropFilter: 'blur(12px)',
@@ -165,7 +165,7 @@ function SunPanel({ onClose }: { onClose: () => void }) {
 }
 
 function MoonPanel({ moonId, onClose }: { moonId: string; onClose: () => void }) {
-  const moon = moons.find((m) => m.id === moonId)
+  const moon = moonId === 'luna' ? lunaData : moons.find((m) => m.id === moonId)
   if (!moon) return null
 
   return (
@@ -174,7 +174,7 @@ function MoonPanel({ moonId, onClose }: { moonId: string; onClose: () => void })
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 340, opacity: 0 }}
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed right-6 top-6 z-20 w-[300px] max-h-[calc(100vh-120px)] overflow-y-auto pointer-events-auto"
+      className="fixed z-20 overflow-y-auto pointer-events-auto md:right-6 md:top-6 md:w-[300px] md:max-h-[calc(100vh-120px)] max-md:bottom-0 max-md:left-0 max-md:right-0 max-md:max-h-[55vh] max-md:w-full max-md:rounded-t-lg"
       style={{
         background: 'rgba(10, 18, 32, 0.85)',
         backdropFilter: 'blur(12px)',
@@ -214,13 +214,13 @@ function MoonPanel({ moonId, onClose }: { moonId: string; onClose: () => void })
       </p>
 
       <a
-        href={`https://en.wikipedia.org/wiki/${moon.wikiTitle}`}
+        href={moon.detailUrl}
         target="_blank"
         rel="noopener noreferrer"
         className="block mt-4 text-[11px] uppercase tracking-wider text-center py-2 rounded-sm hover:bg-white/5 transition-colors"
         style={{ color: '#7a8ba3', border: '1px solid rgba(255,255,255,0.08)' }}
       >
-        More on Wikipedia →
+        {moon.detailUrl.includes('nasa.gov') ? 'More on NASA.gov →' : 'More on Wikipedia →'}
       </a>
     </motion.div>
   )
@@ -250,11 +250,11 @@ export function InfoPanel() {
       )}
       {mission && (
         <motion.div
-          initial={{ x: 340, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: 340, opacity: 0 }}
-          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="fixed right-6 top-6 z-20 w-[300px] max-h-[calc(100vh-120px)] overflow-y-auto pointer-events-auto"
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 100, opacity: 0 }}
+          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="fixed z-20 overflow-y-auto pointer-events-auto md:right-6 md:top-6 md:w-[300px] md:max-h-[calc(100vh-120px)] max-md:bottom-0 max-md:left-0 max-md:right-0 max-md:max-h-[55vh] max-md:w-full max-md:rounded-t-lg"
           style={{
             background: 'rgba(10, 18, 32, 0.85)',
             backdropFilter: 'blur(12px)',
@@ -395,13 +395,19 @@ export function InfoPanel() {
 function DetailRow({ label, value }: { label: string; value: string }) {
   return (
     <div
-      className="flex justify-between py-2"
+      className="flex py-2 gap-3"
       style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
     >
-      <span className="text-[10px] uppercase tracking-wider" style={{ color: '#3d4f65' }}>
+      <span
+        className="text-[10px] uppercase tracking-wider shrink-0 pt-0.5"
+        style={{ color: '#3d4f65', width: '80px' }}
+      >
         {label}
       </span>
-      <span className="text-[13px]" style={{ color: '#e8ecf1' }}>
+      <span
+        className="text-[12px] text-right flex-1"
+        style={{ color: '#e8ecf1', wordBreak: 'break-word' }}
+      >
         {value}
       </span>
     </div>

@@ -14,8 +14,9 @@ export interface Mission {
     type: 'lunar' | 'planetary' | 'deep-space'
     controlPoints: [number, number, number][]
   }
+  landed?: boolean // true if mission landed on a surface
   fact?: string
-  detailUrl?: string // NASA for US, ESA for EU, Wikipedia for others
+  detailUrl?: string
 }
 
 export const missions: Mission[] = [
@@ -92,6 +93,7 @@ export const missions: Mission[] = [
     status: 'completed',
     destination: 'lunar',
     description: 'First soft landing on the Moon. Transmitted photos of the lunar surface.',
+    landed: true,
     trajectory: { type: 'lunar', controlPoints: [[0, 0, 0], [0.3, 0.5, 0.1], [0.7, 0.7, 0], [1, 0.5, 0]] },
     detailUrl: 'https://en.wikipedia.org/wiki/Luna_9',
   },
@@ -193,6 +195,7 @@ export const missions: Mission[] = [
       { name: 'Buzz Aldrin', role: 'Lunar Module Pilot' },
       { name: 'Michael Collins', role: 'Command Module Pilot' },
     ],
+    landed: true,
     trajectory: { type: 'lunar', controlPoints: [[0, 0, 0], [0.3, 0.6, 0.1], [0.7, 0.8, 0], [1, 0.5, 0]] },
     fact: 'One small step',
     detailUrl: 'https://www.nasa.gov/mission/apollo-11/',
@@ -232,6 +235,7 @@ export const missions: Mission[] = [
       { name: 'Harrison Schmitt', role: 'Lunar Module Pilot' },
       { name: 'Ronald Evans', role: 'Command Module Pilot' },
     ],
+    landed: true,
     trajectory: { type: 'lunar', controlPoints: [[0, 0, 0], [0.25, 0.55, 0.15], [0.65, 0.85, -0.05], [1, 0.5, 0]] },
     fact: 'Last human on the Moon... for 50 years',
     detailUrl: 'https://www.nasa.gov/mission/apollo-17/',
@@ -344,6 +348,7 @@ export const missions: Mission[] = [
     status: 'completed',
     destination: 'mars',
     description: 'First successful Mars rover (Sojourner). Proved low-cost planetary exploration was possible.',
+    landed: true,
     trajectory: { type: 'planetary', controlPoints: [[0, 0, 0], [1, 0.5, 0.3], [2, 0.8, 0.1], [3, 0.5, 0]] },
     detailUrl: 'https://science.nasa.gov/mission/mars-pathfinder/',
   },
@@ -358,6 +363,7 @@ export const missions: Mission[] = [
     status: 'completed',
     destination: 'mars',
     description: 'Designed for 90 days, lasted 6 years. Found evidence of ancient water on Mars.',
+    landed: true,
     trajectory: { type: 'planetary', controlPoints: [[0, 0, 0], [1.2, 0.6, 0.2], [2.5, 0.9, 0], [3.5, 0.5, -0.1]] },
     detailUrl: 'https://science.nasa.gov/mission/mer-spirit/',
   },
@@ -372,6 +378,7 @@ export const missions: Mission[] = [
     status: 'completed',
     destination: 'mars',
     description: 'Designed for 90 days, lasted 15 years. Traveled 45 km across Mars. Silenced by a global dust storm.',
+    landed: true,
     trajectory: { type: 'planetary', controlPoints: [[0, 0, 0], [1.1, -0.5, 0.3], [2.3, -0.8, 0.1], [3.5, -0.5, 0]] },
     fact: 'Opportunity: designed for 90 days, lasted 15 years',
     detailUrl: 'https://science.nasa.gov/mission/mer-opportunity/',
@@ -387,6 +394,7 @@ export const missions: Mission[] = [
     status: 'active',
     destination: 'mars',
     description: 'Car-sized rover exploring Gale Crater. Found organic molecules and seasonal methane.',
+    landed: true,
     trajectory: { type: 'planetary', controlPoints: [[0, 0, 0], [1, 0.4, -0.2], [2.2, 0.7, 0], [3.2, 0.5, 0.1]] },
     detailUrl: 'https://science.nasa.gov/mission/msl-curiosity/',
   },
@@ -401,6 +409,7 @@ export const missions: Mission[] = [
     status: 'active',
     destination: 'mars',
     description: 'Searching for ancient microbial life in Jezero Crater. Flew Ingenuity, the first helicopter on another planet.',
+    landed: true,
     trajectory: { type: 'planetary', controlPoints: [[0, 0, 0], [1.1, -0.3, 0.2], [2.4, -0.6, 0], [3.4, -0.3, -0.1]] },
     fact: 'Ingenuity: first powered flight on another world',
     detailUrl: 'https://science.nasa.gov/mission/mars-2020-perseverance/',
@@ -575,6 +584,7 @@ export const missions: Mission[] = [
     status: 'completed',
     destination: 'lunar',
     description: 'First soft landing on the Moon since 1976. Deployed Yutu rover.',
+    landed: true,
     trajectory: { type: 'lunar', controlPoints: [[0, 0, 0], [0.3, 0.55, 0.05], [0.65, 0.75, 0], [1, 0.5, 0.1]] },
     detailUrl: 'https://en.wikipedia.org/wiki/Chang%27e_3',
   },
@@ -589,6 +599,7 @@ export const missions: Mission[] = [
     status: 'active',
     destination: 'lunar',
     description: 'First landing on the far side of the Moon. Deployed Yutu-2 rover via relay satellite.',
+    landed: true,
     trajectory: { type: 'lunar', controlPoints: [[0, 0, 0], [0.35, 0.5, -0.2], [0.7, 0.7, -0.1], [1, 0.5, -0.3]] },
     fact: 'First far-side Moon landing (China)',
     detailUrl: 'https://en.wikipedia.org/wiki/Chang%27e_4',
@@ -604,6 +615,7 @@ export const missions: Mission[] = [
     status: 'completed',
     destination: 'lunar',
     description: 'First lunar sample return since 1976. Brought back 1.73 kg of Moon rocks.',
+    landed: true,
     trajectory: { type: 'lunar', controlPoints: [[0, 0, 0], [0.3, 0.55, 0.1], [0.65, 0.75, 0], [1, 0.5, 0]] },
     detailUrl: 'https://en.wikipedia.org/wiki/Chang%27e_5',
   },
@@ -618,6 +630,7 @@ export const missions: Mission[] = [
     status: 'completed',
     destination: 'lunar',
     description: 'First sample return from the far side of the Moon.',
+    landed: true,
     trajectory: { type: 'lunar', controlPoints: [[0, 0, 0], [0.3, 0.5, -0.2], [0.65, 0.75, -0.15], [1, 0.5, -0.3]] },
     detailUrl: 'https://en.wikipedia.org/wiki/Chang%27e_6',
   },
@@ -660,6 +673,7 @@ export const missions: Mission[] = [
     status: 'active',
     destination: 'mars',
     description: 'China\'s first Mars mission. Orbiter, lander, and Zhurong rover. First non-NASA Mars rover to operate.',
+    landed: true,
     trajectory: { type: 'planetary', controlPoints: [[0, 0, 0], [1, 0.6, -0.2], [2, 0.8, 0], [3, 0.5, 0.1]] },
     detailUrl: 'https://en.wikipedia.org/wiki/Tianwen-1',
   },
@@ -704,6 +718,7 @@ export const missions: Mission[] = [
     status: 'completed',
     destination: 'lunar',
     description: 'First landing near the lunar south pole. India became 4th nation to soft-land on Moon.',
+    landed: true,
     trajectory: { type: 'lunar', controlPoints: [[0, 0, 0], [0.4, 0.6, 0.2], [0.75, 0.8, 0.15], [1, 0.5, 0.3]] },
     fact: 'First lunar south pole landing (India)',
     detailUrl: 'https://en.wikipedia.org/wiki/Chandrayaan-3',
@@ -763,6 +778,7 @@ export const missions: Mission[] = [
     status: 'completed',
     destination: 'lunar',
     description: 'Smart Lander for Investigating Moon. Achieved pinpoint landing within 55m of target.',
+    landed: true,
     trajectory: { type: 'lunar', controlPoints: [[0, 0, 0], [0.35, 0.65, 0.1], [0.7, 0.8, 0.05], [1, 0.5, 0.15]] },
     fact: 'First precision Moon landing (Japan)',
     detailUrl: 'https://en.wikipedia.org/wiki/Smart_Lander_for_Investigating_Moon',
@@ -780,6 +796,7 @@ export const missions: Mission[] = [
     status: 'completed',
     destination: 'deep-space',
     description: 'Orbited Saturn for 13 years. Huygens probe landed on Titan, the most distant landing ever.',
+    landed: true,
     trajectory: { type: 'deep-space', controlPoints: [[0, 0, 0], [2, 1, 0.5], [4, 2, 0], [6, 3, -0.5]] },
     detailUrl: 'https://www.esa.int/Science_Exploration/Space_Science/Cassini-Huygens',
   },

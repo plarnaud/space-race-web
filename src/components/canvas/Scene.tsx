@@ -95,6 +95,10 @@ function SceneContent() {
           MIDDLE: THREE.MOUSE.DOLLY,
           RIGHT: THREE.MOUSE.PAN,
         }}
+        touches={{
+          ONE: THREE.TOUCH.ROTATE,
+          TWO: THREE.TOUCH.DOLLY_PAN,
+        }}
         minDistance={0.5}
         maxDistance={150}
         enableDamping
