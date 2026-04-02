@@ -18,7 +18,7 @@ const SITE_URL = "https://spacerace101.com";
 const SITE_NAME = "Space Race 101";
 const TITLE = "Space Race 101 - Interactive 3D Solar System & Space Mission Timeline";
 const DESCRIPTION =
-  "Explore every major space mission from 1957 to 2030 in an interactive 3D solar system. Track 50+ missions across NASA, SpaceX, China, India, Japan, and ESA. See planets, moons, rovers, and spacecraft with accurate orbital mechanics.";
+  "Explore every major space mission from 1957 to 2030 in an interactive 3D solar system. Track 50+ missions across NASA, SpaceX, China, India, Japan, and ESA. See planets, moons, rovers, and spacecraft across the solar system.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
