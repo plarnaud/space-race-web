@@ -45,7 +45,7 @@ export default function Home() {
 
       {/* SEO content — visually hidden but crawlable by search engines */}
       <div className="sr-only">
-        <h1>Space Race 101 — Interactive 3D Solar System & Space Mission Timeline</h1>
+        <h1>Space Race 101 - Interactive 3D Solar System & Space Mission Timeline</h1>
         <p>
           Explore the complete history of space exploration from 1957 to 2030 in an interactive
           3D solar system. Track over 50 major missions from NASA, Roscosmos, CNSA, ISRO, JAXA,

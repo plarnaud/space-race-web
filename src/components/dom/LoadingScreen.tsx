@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 
 const BOOT_LINES = [
-  { text: 'SPACE RACE 101 — MISSION CONTROL', delay: 0 },
+  { text: 'SPACE RACE 101 - MISSION CONTROL', delay: 0 },
   { text: '════════════════════════════════════', delay: 100 },
   { text: '', delay: 200 },
   { text: 'INITIALIZING SYSTEMS...', delay: 300 },

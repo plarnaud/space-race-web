@@ -16,7 +16,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 const SITE_URL = "https://spacerace101.com";
 const SITE_NAME = "Space Race 101";
-const TITLE = "Space Race 101 — Interactive 3D Solar System & Space Mission Timeline";
+const TITLE = "Space Race 101 - Interactive 3D Solar System & Space Mission Timeline";
 const DESCRIPTION =
   "Explore every major space mission from 1957 to 2030 in an interactive 3D solar system. Track 50+ missions across NASA, SpaceX, China, India, Japan, and ESA. See planets, moons, rovers, and spacecraft with accurate orbital mechanics.";
 
@@ -81,7 +81,7 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Space Race 101 — Interactive 3D Solar System showing planets and space missions from 1957 to 2030",
+        alt: "Space Race 101 - Interactive 3D Solar System showing planets and space missions from 1957 to 2030",
       },
     ],
   },
@@ -141,7 +141,7 @@ export default function RootLayout({
         name: "What is the new space race?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "The new space race is the 21st century competition between multiple nations — the United States, China, India, Japan, and Europe — to explore the Moon, Mars, and deep space. Unlike the Cold War space race between the US and Soviet Union, today's race involves both government agencies and private companies like SpaceX.",
+          text: "The new space race is the 21st century competition between multiple nations - the United States, China, India, Japan, and Europe - to explore the Moon, Mars, and deep space. Unlike the Cold War space race between the US and Soviet Union, today's race involves both government agencies and private companies like SpaceX.",
         },
       },
       {
