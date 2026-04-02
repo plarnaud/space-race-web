@@ -5,7 +5,7 @@ import { useFrame } from '@react-three/fiber'
 import { Html } from '@react-three/drei'
 import * as THREE from 'three'
 import { useTimelineStore } from '@/stores/timeline-store'
-import { getActiveMissions, countries, type Mission } from '@/data/missions'
+import { getMissionsByDate, countries, type Mission } from '@/data/missions'
 import { planets, getPlanetPosition } from '@/data/planets'
 import { MOON_SCALE } from './Moon'
 
@@ -197,7 +197,7 @@ export function MissionMarkers() {
   const filteredCountry = useTimelineStore((s) => s.filteredCountry)
 
   const visibleMissions = useMemo(() => {
-    let all = getActiveMissions(date)
+    let all = getMissionsByDate(date)
     if (filteredCountry) {
       all = all.filter((m) => m.country === filteredCountry)
     }
