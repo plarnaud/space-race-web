@@ -128,9 +128,12 @@ function SceneContent() {
 }
 
 export function Scene() {
+  const earth = planets.find((p) => p.name === 'Earth')!
+  const [ix, , iz] = getPlanetPosition(earth, 2026.25)
+
   return (
     <Canvas
-      camera={{ position: [0, 3, 25], fov: 45 }}
+      camera={{ position: [ix + 1, 1.5, iz + 3], fov: 45 }}
       gl={{
         antialias: true,
         alpha: false,
