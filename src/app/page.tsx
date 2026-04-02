@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useCallback } from 'react'
 import dynamic from 'next/dynamic'
 import { Title } from '@/components/dom/Title'
 import { Scoreboard } from '@/components/dom/Scoreboard'
@@ -7,6 +8,7 @@ import { Timeline } from '@/components/dom/Timeline'
 import { InfoPanel } from '@/components/dom/InfoPanel'
 import { Controls } from '@/components/dom/Controls'
 import { SolarSystemBar } from '@/components/dom/SolarSystemBar'
+import { LoadingScreen } from '@/components/dom/LoadingScreen'
 import { missions } from '@/data/missions'
 import { planets } from '@/data/planets'
 
@@ -16,6 +18,9 @@ const Scene = dynamic(
 )
 
 export default function Home() {
+  const [loading, setLoading] = useState(true)
+  const handleLoadComplete = useCallback(() => setLoading(false), [])
+
   return (
     <main className="w-full h-screen relative overflow-hidden">
       {/* 3D Canvas */}
@@ -23,15 +28,20 @@ export default function Home() {
         <Scene />
       </div>
 
-      {/* HUD overlay */}
-      <div className="absolute inset-0 z-10 pointer-events-none">
-        <SolarSystemBar />
-        <Title />
-        <Scoreboard />
-        <Timeline />
-        <InfoPanel />
-        <Controls />
-      </div>
+      {/* Loading screen */}
+      {loading && <LoadingScreen onComplete={handleLoadComplete} />}
+
+      {/* HUD overlay — only show after loading */}
+      {!loading && (
+        <div className="absolute inset-0 z-10 pointer-events-none">
+          <SolarSystemBar />
+          <Title />
+          <Scoreboard />
+          <Timeline />
+          <InfoPanel />
+          <Controls />
+        </div>
+      )}
 
       {/* SEO content — visually hidden but crawlable by search engines */}
       <div className="sr-only">
