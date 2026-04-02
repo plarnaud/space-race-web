@@ -8,8 +8,10 @@ interface TimelineState {
   focusedId: string | null // camera centered on this (first tap on mobile)
   selectedMissionId: string | null // inspect panel open (second tap on mobile, or click on desktop)
   filteredCountry: string | null
+  onlyActive: boolean
   zoomLevel: 'solar-system' | 'earth-moon' | 'mission-detail'
   setDate: (date: number) => void
+  toggleOnlyActive: () => void
   // On desktop: focus + select in one click. On mobile: first tap focuses, second selects.
   focusOn: (id: string | null) => void
   selectMission: (id: string | null) => void
@@ -23,8 +25,10 @@ export const useTimelineStore = create<TimelineState>((set, get) => ({
   focusedId: null,
   selectedMissionId: null,
   filteredCountry: null,
+  onlyActive: false,
   zoomLevel: 'earth-moon',
   setDate: (date) => set({ date: Math.max(MIN_DATE, Math.min(MAX_DATE, date)) }),
+  toggleOnlyActive: () => set((s) => ({ onlyActive: !s.onlyActive })),
   focusOn: (id) => set({ focusedId: id }),
   selectMission: (id) => set({ selectedMissionId: id, focusedId: id }),
   tapObject: (id, isMobile) => {

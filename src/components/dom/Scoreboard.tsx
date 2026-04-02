@@ -17,6 +17,8 @@ export function Scoreboard() {
   const date = useTimelineStore((s) => s.date)
   const filteredCountry = useTimelineStore((s) => s.filteredCountry)
   const setFilteredCountry = useTimelineStore((s) => s.setFilteredCountry)
+  const onlyActive = useTimelineStore((s) => s.onlyActive)
+  const toggleOnlyActive = useTimelineStore((s) => s.toggleOnlyActive)
   const scores = getCountryScores(date)
   const [collapsed, setCollapsed] = useState(false)
 
@@ -51,6 +53,26 @@ export function Scoreboard() {
           </button>
         )}
       </div>
+
+      {/* Active-only toggle */}
+      {!collapsed && (
+        <button
+          onClick={toggleOnlyActive}
+          className="flex items-center gap-1.5 mb-2 text-[9px] uppercase tracking-wider bg-transparent border-none cursor-pointer"
+          style={{ color: onlyActive ? '#00d4ff' : '#3d4f65', fontFamily: 'var(--font-mono)' }}
+        >
+          <span
+            className="inline-block w-3 h-3 rounded-sm border"
+            style={{
+              borderColor: onlyActive ? '#00d4ff' : '#3d4f65',
+              background: onlyActive ? 'rgba(0, 212, 255, 0.2)' : 'transparent',
+            }}
+          >
+            {onlyActive && <span style={{ display: 'block', textAlign: 'center', lineHeight: '12px', fontSize: '9px' }}>✓</span>}
+          </span>
+          Only active missions
+        </button>
+      )}
 
       {!collapsed && (
         <>

@@ -5,7 +5,7 @@ import { useFrame } from '@react-three/fiber'
 import { Html } from '@react-three/drei'
 import * as THREE from 'three'
 import { useTimelineStore } from '@/stores/timeline-store'
-import { getMissionsByDate, countries, type Mission } from '@/data/missions'
+import { getMissionsByDate, getActiveMissions, countries, type Mission } from '@/data/missions'
 import { planets, getPlanetPosition } from '@/data/planets'
 import { MOON_SCALE } from './Moon'
 
@@ -121,7 +121,12 @@ function MissionDot({ mission, position }: { mission: Mission; position: [number
 
   const handleClick = () => {
     tapObject(mission.id, isMobile)
-    // No camera recentering for missions — only planets/moons move the camera
+    // Center camera on deep-space missions (they're far away)
+    if (mission.destination === 'deep-space') {
+      window.dispatchEvent(new CustomEvent('center-mission', {
+        detail: { x: position[0], y: position[1], z: position[2] },
+      }))
+    }
   }
 
   return (
@@ -143,7 +148,7 @@ function MissionDot({ mission, position }: { mission: Mission; position: [number
           document.body.style.cursor = 'default'
         }}
       >
-        <sphereGeometry args={[0.025, 8, 8]} />
+        <sphereGeometry args={[0.015, 8, 8]} />
         <meshBasicMaterial color={color} />
       </mesh>
 
@@ -191,9 +196,10 @@ function MissionDot({ mission, position }: { mission: Mission; position: [number
 export function MissionMarkers() {
   const date = useTimelineStore((s) => s.date)
   const filteredCountry = useTimelineStore((s) => s.filteredCountry)
+  const onlyActive = useTimelineStore((s) => s.onlyActive)
 
   const visibleMissions = useMemo(() => {
-    let all = getMissionsByDate(date)
+    let all = onlyActive ? getActiveMissions(date) : getMissionsByDate(date)
     if (filteredCountry) {
       all = all.filter((m) => m.country === filteredCountry)
     }
@@ -214,7 +220,7 @@ export function MissionMarkers() {
       ...orbit.map((m, i) => ({ mission: m, pos: markerPosition(m, i, orbit.length, date) })),
       ...deep.map((m, i) => ({ mission: m, pos: markerPosition(m, i, deep.length, date) })),
     ]
-  }, [date, filteredCountry])
+  }, [date, filteredCountry, onlyActive])
 
   return (
     <group>
