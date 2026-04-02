@@ -16,18 +16,16 @@ function SunSphere() {
 }
 
 export function Sun() {
-  const selectMission = useTimelineStore((s) => s.selectMission)
-  const selectedId = useTimelineStore((s) => s.selectedMissionId)
-  const isSelected = selectedId === 'sun'
+  const tapObject = useTimelineStore((s) => s.tapObject)
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 
   return (
     <group position={[0, 0, 0]}>
-      {/* Click target — matches the visible sphere */}
       <mesh
         onClick={(e) => {
           e.stopPropagation()
-          selectMission(isSelected ? null : 'sun')
-          window.dispatchEvent(new CustomEvent('center-planet', { detail: 'sun' }))
+          tapObject('sun', isMobile)
+          // No camera recentering for sun — only planets/moons move the camera
         }}
         onPointerEnter={(e) => { e.stopPropagation(); document.body.style.cursor = 'pointer' }}
         onPointerLeave={() => { document.body.style.cursor = 'default' }}

@@ -11,9 +11,11 @@ const LUNAR_PERIOD_YEARS = 27.322 / 365.25
 
 export function Moon() {
   const date = useTimelineStore((s) => s.date)
-  const selectMission = useTimelineStore((s) => s.selectMission)
+  const tapObject = useTimelineStore((s) => s.tapObject)
+  const focusedId = useTimelineStore((s) => s.focusedId)
   const selectedId = useTimelineStore((s) => s.selectedMissionId)
   const isSelected = selectedId === 'moon-luna'
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
   const [hovered, setHovered] = useState(false)
 
   const [colorMap, bumpMap] = useTexture([
@@ -38,10 +40,12 @@ export function Moon() {
       <mesh
         onClick={(e) => {
           e.stopPropagation()
-          selectMission(isSelected ? null : 'moon-luna')
-          window.dispatchEvent(new CustomEvent('center-mission', {
-            detail: { x: position[0], y: position[1], z: position[2] },
-          }))
+          tapObject('moon-luna', isMobile)
+          if (focusedId !== 'moon-luna') {
+            window.dispatchEvent(new CustomEvent('center-mission', {
+              detail: { x: position[0], y: position[1], z: position[2] },
+            }))
+          }
         }}
         onPointerEnter={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer' }}
         onPointerLeave={() => { setHovered(false); document.body.style.cursor = 'default' }}

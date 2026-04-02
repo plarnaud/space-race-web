@@ -226,32 +226,16 @@ function MoonPanel({ moonId, onClose }: { moonId: string; onClose: () => void })
   )
 }
 
-function useIsMobile() {
-  const [mobile, setMobile] = useState(false)
-  useEffect(() => {
-    setMobile(window.innerWidth < 768)
-    const h = () => setMobile(window.innerWidth < 768)
-    window.addEventListener('resize', h)
-    return () => window.removeEventListener('resize', h)
-  }, [])
-  return mobile
-}
-
 export function InfoPanel() {
   const selectedId = useTimelineStore((s) => s.selectedMissionId)
   const selectMission = useTimelineStore((s) => s.selectMission)
-  const isMobile = useIsMobile()
 
   const isSun = selectedId === 'sun'
   const isPlanet = selectedId?.startsWith('planet-') ?? false
   const isMoon = selectedId?.startsWith('moon-') ?? false
   const moonId = isMoon && selectedId ? selectedId.replace('moon-', '') : null
-  const isCelestialBody = isSun || isPlanet || isMoon
-  const mission = selectedId && !isCelestialBody ? missions.find((m) => m.id === selectedId) : null
+  const mission = selectedId && !isSun && !isPlanet && !isMoon ? missions.find((m) => m.id === selectedId) : null
   const planetName = isPlanet && selectedId ? selectedId.replace('planet-', '') : null
-
-  // On mobile, only show panel for planets/sun/moons, not missions
-  const showMission = mission && !isMobile
 
   return (
     <AnimatePresence>
@@ -264,7 +248,7 @@ export function InfoPanel() {
       {moonId && (
         <MoonPanel moonId={moonId} onClose={() => selectMission(null)} />
       )}
-      {showMission && (
+      {mission && (
         <motion.div
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}

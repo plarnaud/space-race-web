@@ -34,25 +34,29 @@ function ColorPlanet({ planet, isPlanetSelected }: { planet: Planet; isPlanetSel
 }
 
 function PlanetMesh({ planet, position }: { planet: Planet; position: [number, number, number] }) {
-  const selectMission = useTimelineStore((s) => s.selectMission)
+  const tapObject = useTimelineStore((s) => s.tapObject)
+  const focusedId = useTimelineStore((s) => s.focusedId)
   const selectedId = useTimelineStore((s) => s.selectedMissionId)
-  const isPlanetSelected = selectedId === `planet-${planet.name.toLowerCase()}`
+  const planetId = `planet-${planet.name.toLowerCase()}`
+  const isPlanetSelected = selectedId === planetId
+  const isFocused = focusedId === planetId
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 
   return (
     <group>
-      {/* Orbit ring */}
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[planet.visualDistance - 0.02, planet.visualDistance + 0.02, 128]} />
         <meshBasicMaterial color="#ffffff" transparent opacity={0.04} side={THREE.DoubleSide} />
       </mesh>
 
       <group position={position}>
-        {/* Textured planet — IS the click target */}
         <group
           onClick={(e) => {
             e.stopPropagation()
-            selectMission(isPlanetSelected ? null : `planet-${planet.name.toLowerCase()}`)
-            window.dispatchEvent(new CustomEvent('center-planet', { detail: planet.name.toLowerCase() }))
+            tapObject(planetId, isMobile)
+            if (!isFocused) {
+              window.dispatchEvent(new CustomEvent('center-planet', { detail: planet.name.toLowerCase() }))
+            }
           }}
           onPointerEnter={(e) => { e.stopPropagation(); document.body.style.cursor = 'pointer' }}
           onPointerLeave={() => { document.body.style.cursor = 'default' }}

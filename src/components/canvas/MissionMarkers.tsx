@@ -104,11 +104,12 @@ function formatMissionDate(dateStr: string): string {
 function MissionDot({ mission, position }: { mission: Mission; position: [number, number, number] }) {
   const meshRef = useRef<THREE.Mesh>(null)
   const color = COUNTRY_COLORS[mission.country] || '#ffffff'
-  const selectMission = useTimelineStore((s) => s.selectMission)
+  const tapObject = useTimelineStore((s) => s.tapObject)
   const selectedId = useTimelineStore((s) => s.selectedMissionId)
   const isSelected = selectedId === mission.id
   const isActive = mission.status === 'active'
   const [hovered, setHovered] = useState(false)
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 
   useFrame(() => {
     if (!meshRef.current) return
@@ -118,6 +119,11 @@ function MissionDot({ mission, position }: { mission: Mission; position: [number
     }
   })
 
+  const handleClick = () => {
+    tapObject(mission.id, isMobile)
+    // No camera recentering for missions — only planets/moons move the camera
+  }
+
   return (
     <group position={position}>
       {/* Visible dot + click target */}
@@ -125,12 +131,7 @@ function MissionDot({ mission, position }: { mission: Mission; position: [number
         ref={meshRef}
         onClick={(e) => {
           e.stopPropagation()
-          selectMission(isSelected ? null : mission.id)
-          if (!isSelected) {
-            window.dispatchEvent(new CustomEvent('center-mission', {
-              detail: { x: position[0], y: position[1], z: position[2] },
-            }))
-          }
+          handleClick()
         }}
         onPointerEnter={(e) => {
           e.stopPropagation()
@@ -168,12 +169,7 @@ function MissionDot({ mission, position }: { mission: Mission; position: [number
           }}
           onClick={(e) => {
             e.stopPropagation()
-            selectMission(isSelected ? null : mission.id)
-            if (!isSelected) {
-              window.dispatchEvent(new CustomEvent('center-mission', {
-                detail: { x: position[0], y: position[1], z: position[2] },
-              }))
-            }
+            handleClick()
           }}
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}

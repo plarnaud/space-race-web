@@ -7,20 +7,25 @@ import { planets, getPlanetPosition } from '@/data/planets'
 import { useTimelineStore } from '@/stores/timeline-store'
 
 function MoonMesh({ moon, position }: { moon: MoonData; position: [number, number, number] }) {
-  const selectMission = useTimelineStore((s) => s.selectMission)
+  const tapObject = useTimelineStore((s) => s.tapObject)
+  const focusedId = useTimelineStore((s) => s.focusedId)
   const selectedId = useTimelineStore((s) => s.selectedMissionId)
-  const isSelected = selectedId === `moon-${moon.id}`
+  const moonId = `moon-${moon.id}`
+  const isSelected = selectedId === moonId
   const [hovered, setHovered] = useState(false)
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 
   return (
     <group position={position}>
       <group
         onClick={(e) => {
           e.stopPropagation()
-          selectMission(isSelected ? null : `moon-${moon.id}`)
-          window.dispatchEvent(new CustomEvent('center-mission', {
-            detail: { x: position[0], y: position[1], z: position[2] },
-          }))
+          tapObject(moonId, isMobile)
+          if (focusedId !== moonId) {
+            window.dispatchEvent(new CustomEvent('center-mission', {
+              detail: { x: position[0], y: position[1], z: position[2] },
+            }))
+          }
         }}
         onPointerEnter={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer' }}
         onPointerLeave={() => { setHovered(false); document.body.style.cursor = 'default' }}
