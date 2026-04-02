@@ -369,13 +369,30 @@ export function InfoPanel() {
             </div>
           )}
 
+          {/* Visualizer link */}
+          {mission.visualizerUrl && (
+            <a
+              href={mission.visualizerUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block mt-4 text-[11px] uppercase tracking-wider text-center py-2.5 rounded-sm hover:bg-cyan-500/10 transition-colors"
+              style={{
+                color: '#00d4ff',
+                border: '1px solid rgba(0, 212, 255, 0.25)',
+                background: 'rgba(0, 212, 255, 0.05)',
+              }}
+            >
+              See flight path in NASA Eyes →
+            </a>
+          )}
+
           {/* Detail link */}
           {mission.detailUrl && (
             <a
               href={mission.detailUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="block mt-4 text-[11px] uppercase tracking-wider text-center py-2 rounded-sm hover:bg-white/5 transition-colors"
+              className="block mt-3 text-[11px] uppercase tracking-wider text-center py-2 rounded-sm hover:bg-white/5 transition-colors"
               style={{
                 color: '#7a8ba3',
                 border: '1px solid rgba(255,255,255,0.08)',

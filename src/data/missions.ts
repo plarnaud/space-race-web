@@ -14,9 +14,10 @@ export interface Mission {
     type: 'lunar' | 'planetary' | 'deep-space'
     controlPoints: [number, number, number][]
   }
-  landed?: boolean // true if mission landed on a surface
+  landed?: boolean
   fact?: string
   detailUrl?: string
+  visualizerUrl?: string // link to NASA Eyes or other flight path visualizer
 }
 
 export const missions: Mission[] = [
@@ -290,6 +291,7 @@ export const missions: Mission[] = [
     description: 'Only spacecraft to visit all four outer planets. Now in interstellar space.',
     trajectory: { type: 'deep-space', controlPoints: [[0, 0, 0], [1.5, -1, 0.3], [4, -2, 1], [8, -4, 2]] },
     detailUrl: 'https://science.nasa.gov/mission/voyager/',
+    visualizerUrl: 'https://eyes.nasa.gov/apps/solar-system/#/sc_voyager_2',
   },
   {
     id: 'voyager-1',
@@ -305,6 +307,7 @@ export const missions: Mission[] = [
     trajectory: { type: 'deep-space', controlPoints: [[0, 0, 0], [2, 1, 0.5], [5, 3, 1], [10, 5, 2]] },
     fact: 'Voyager: the farthest human-made objects leave the solar system',
     detailUrl: 'https://science.nasa.gov/mission/voyager/',
+    visualizerUrl: 'https://eyes.nasa.gov/apps/solar-system/#/sc_voyager_1',
   },
   {
     id: 'sts-1',
@@ -334,6 +337,7 @@ export const missions: Mission[] = [
     description: 'Revolutionized astronomy with deep field images revealing galaxies billions of light-years away.',
     trajectory: { type: 'planetary', controlPoints: [[0, 0, 0], [0.3, 0.25, 0.1], [0.7, 0.1, -0.1], [1, 0, 0]] },
     detailUrl: 'https://science.nasa.gov/mission/hubble/',
+    visualizerUrl: 'https://eyes.nasa.gov/apps/solar-system/#/sc_hubble',
   },
 
   // === US — MARS ===
@@ -351,6 +355,7 @@ export const missions: Mission[] = [
     landed: true,
     trajectory: { type: 'planetary', controlPoints: [[0, 0, 0], [1, 0.5, 0.3], [2, 0.8, 0.1], [3, 0.5, 0]] },
     detailUrl: 'https://science.nasa.gov/mission/mars-pathfinder/',
+    visualizerUrl: 'https://eyes.nasa.gov/apps/solar-system/#/sc_pathfinder',
   },
   {
     id: 'spirit',
@@ -366,6 +371,7 @@ export const missions: Mission[] = [
     landed: true,
     trajectory: { type: 'planetary', controlPoints: [[0, 0, 0], [1.2, 0.6, 0.2], [2.5, 0.9, 0], [3.5, 0.5, -0.1]] },
     detailUrl: 'https://science.nasa.gov/mission/mer-spirit/',
+    visualizerUrl: 'https://eyes.nasa.gov/apps/solar-system/#/sc_mer_a',
   },
   {
     id: 'opportunity',
@@ -382,6 +388,7 @@ export const missions: Mission[] = [
     trajectory: { type: 'planetary', controlPoints: [[0, 0, 0], [1.1, -0.5, 0.3], [2.3, -0.8, 0.1], [3.5, -0.5, 0]] },
     fact: 'Opportunity: designed for 90 days, lasted 15 years',
     detailUrl: 'https://science.nasa.gov/mission/mer-opportunity/',
+    visualizerUrl: 'https://eyes.nasa.gov/apps/solar-system/#/sc_mer_b',
   },
   {
     id: 'curiosity',
@@ -397,6 +404,7 @@ export const missions: Mission[] = [
     landed: true,
     trajectory: { type: 'planetary', controlPoints: [[0, 0, 0], [1, 0.4, -0.2], [2.2, 0.7, 0], [3.2, 0.5, 0.1]] },
     detailUrl: 'https://science.nasa.gov/mission/msl-curiosity/',
+    visualizerUrl: 'https://eyes.nasa.gov/apps/solar-system/#/sc_msl',
   },
   {
     id: 'perseverance',
@@ -413,6 +421,7 @@ export const missions: Mission[] = [
     trajectory: { type: 'planetary', controlPoints: [[0, 0, 0], [1.1, -0.3, 0.2], [2.4, -0.6, 0], [3.4, -0.3, -0.1]] },
     fact: 'Ingenuity: first powered flight on another world',
     detailUrl: 'https://science.nasa.gov/mission/mars-2020-perseverance/',
+    visualizerUrl: 'https://eyes.nasa.gov/apps/solar-system/#/sc_mars_2020',
   },
   {
     id: 'new-horizons',
@@ -427,6 +436,7 @@ export const missions: Mission[] = [
     description: 'First Pluto flyby. Revealed a complex world with heart-shaped glaciers and blue skies.',
     trajectory: { type: 'deep-space', controlPoints: [[0, 0, 0], [3, 0.5, -0.3], [6, 1, -0.5], [9, 2, -1]] },
     detailUrl: 'https://science.nasa.gov/mission/new-horizons/',
+    visualizerUrl: 'https://eyes.nasa.gov/apps/solar-system/#/sc_new_horizons',
   },
   {
     id: 'jwst',
@@ -442,6 +452,7 @@ export const missions: Mission[] = [
     trajectory: { type: 'deep-space', controlPoints: [[0, 0, 0], [0.5, 0.3, 0.1], [1, 0.5, 0], [1.5, 0.3, -0.1]] },
     fact: 'JWST: seeing the universe as it was 13.5 billion years ago',
     detailUrl: 'https://science.nasa.gov/mission/webb/',
+    visualizerUrl: 'https://eyes.nasa.gov/apps/solar-system/#/sc_jwst',
   },
 
   // === US — ARTEMIS ===
@@ -458,6 +469,7 @@ export const missions: Mission[] = [
     description: 'Uncrewed test flight of SLS and Orion. Flew farther from Earth than any human-rated spacecraft.',
     trajectory: { type: 'lunar', controlPoints: [[0, 0, 0], [0.3, 0.6, 0.05], [0.7, 0.85, 0], [1, 0.5, 0]] },
     detailUrl: 'https://www.nasa.gov/mission/artemis-i/',
+    visualizerUrl: 'https://eyes.nasa.gov/apps/solar-system/#/sc_orion_artemis_1',
   },
   {
     id: 'artemis-2',
@@ -479,6 +491,7 @@ export const missions: Mission[] = [
     trajectory: { type: 'lunar', controlPoints: [[0, 0, 0], [0.25, 0.5, 0.1], [0.6, 0.9, 0], [1, 0.5, 0]] },
     fact: 'Humans return to lunar orbit',
     detailUrl: 'https://www.nasa.gov/mission/artemis-ii/',
+    visualizerUrl: 'https://eyes.nasa.gov/apps/solar-system/#/sc_orion_artemis_2',
   },
   {
     id: 'artemis-3',
@@ -510,6 +523,7 @@ export const missions: Mission[] = [
     trajectory: { type: 'planetary', controlPoints: [[0, 0, 0], [0.3, 0.15, 0], [0.7, -0.15, 0], [1, 0, 0]] },
     fact: 'International Space Station: 16 nations, one orbit',
     detailUrl: 'https://www.nasa.gov/international-space-station/',
+    visualizerUrl: 'https://eyes.nasa.gov/apps/solar-system/#/sc_iss',
   },
 
   // === SPACEX ===
@@ -799,6 +813,7 @@ export const missions: Mission[] = [
     landed: true,
     trajectory: { type: 'deep-space', controlPoints: [[0, 0, 0], [2, 1, 0.5], [4, 2, 0], [6, 3, -0.5]] },
     detailUrl: 'https://www.esa.int/Science_Exploration/Space_Science/Cassini-Huygens',
+    visualizerUrl: 'https://eyes.nasa.gov/apps/solar-system/#/sc_cassini',
   },
   {
     id: 'rosetta',
@@ -828,6 +843,7 @@ export const missions: Mission[] = [
     description: 'Jupiter Icy Moons Explorer. En route to study Ganymede, Europa, and Callisto. Arrives 2031.',
     trajectory: { type: 'deep-space', controlPoints: [[0, 0, 0], [2, 0.5, 0.3], [4, 1, 0], [6, 1.5, -0.3]] },
     detailUrl: 'https://www.esa.int/Science_Exploration/Space_Science/Juice',
+    visualizerUrl: 'https://eyes.nasa.gov/apps/solar-system/#/sc_juice',
   },
   {
     id: 'exomars-rosalind-franklin',
